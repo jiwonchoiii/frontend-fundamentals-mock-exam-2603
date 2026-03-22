@@ -55,7 +55,10 @@ export function useBookingFilters() {
     setSearchParams(params, { replace: true });
   }, [date, startTime, endTime, attendees, equipment, preferredFloor, setSearchParams]);
 
-  const validationError = useMemo(() => getValidationError(startTime, endTime, attendees), [startTime, endTime, attendees]);
+  const validationError = useMemo(
+    () => getValidationError(startTime, endTime, attendees),
+    [startTime, endTime, attendees]
+  );
   const isFilterComplete = startTime !== '' && endTime !== '' && !validationError;
 
   const updateDate = (value: string) => {

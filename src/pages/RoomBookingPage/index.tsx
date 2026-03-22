@@ -48,10 +48,7 @@ export function RoomBookingPage() {
     enabled: !!date,
   });
 
-  const floors = useMemo(
-    () => [...new Set(rooms.map(room => room.floor))].sort((a, b) => a - b),
-    [rooms]
-  );
+  const floors = useMemo(() => [...new Set(rooms.map(room => room.floor))].sort((a, b) => a - b), [rooms]);
 
   const availableRooms = useMemo(() => {
     if (!isFilterComplete) {
