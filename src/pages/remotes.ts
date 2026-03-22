@@ -1,7 +1,9 @@
+import Axios from 'axios';
 import { http } from 'pages/http';
 import {
   CreateReservationRequest,
-  CreateReservationResponse,
+  CreateReservationSuccessResponse,
+  ReservationApiErrorResponse,
   Reservation,
   Room,
 } from 'pages/components/reservationDomain';
@@ -15,7 +17,7 @@ export function getReservations(date: string) {
 }
 
 export function createReservation(data: CreateReservationRequest) {
-  return http.post<CreateReservationRequest, CreateReservationResponse>('/api/reservations', data);
+  return http.post<CreateReservationRequest, CreateReservationSuccessResponse>('/api/reservations', data);
 }
 
 export function getMyReservations() {
@@ -24,4 +26,13 @@ export function getMyReservations() {
 
 export function cancelReservation(id: string) {
   return http.delete<{ ok: boolean }>(`/api/reservations/${id}`);
+}
+
+export function getApiErrorMessage(error: unknown, fallback = '요청에 실패했습니다.') {
+  if (!Axios.isAxiosError(error)) {
+    return fallback;
+  }
+
+  const data = error.response?.data as ReservationApiErrorResponse | undefined;
+  return data?.message ?? fallback;
 }

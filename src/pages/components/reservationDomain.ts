@@ -27,11 +27,17 @@ export interface CreateReservationRequest {
   equipment: Equipment[];
 }
 
-export interface CreateReservationResponse {
-  ok: boolean;
-  reservation?: Reservation;
-  code?: 'CONFLICT' | 'INVALID' | 'NOT_FOUND';
-  message?: string;
+export type ReservationErrorCode = 'CONFLICT' | 'INVALID' | 'NOT_FOUND';
+
+export interface CreateReservationSuccessResponse {
+  ok: true;
+  reservation: Reservation;
+}
+
+export interface ReservationApiErrorResponse {
+  ok: false;
+  code: ReservationErrorCode;
+  message: string;
 }
 
 export const EQUIPMENT_LABELS: Record<Equipment, string> = {

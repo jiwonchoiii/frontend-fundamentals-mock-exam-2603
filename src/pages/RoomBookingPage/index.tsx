@@ -4,8 +4,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Top, Spacing, Border, Button, Text, Select, ListRow } from '_tosslib/components';
 import { colors } from '_tosslib/constants/colors';
-import { getRooms, getReservations, createReservation } from 'pages/remotes';
-import axios from 'axios';
+import { getRooms, getReservations, createReservation, getApiErrorMessage } from 'pages/remotes';
 import {
   ALL_EQUIPMENT,
   END_TIME_OPTIONS,
@@ -126,21 +125,12 @@ export function RoomBookingPage() {
         equipment,
       });
 
-      if ('ok' in result && result.ok) {
+      if (result.ok) {
         navigate('/', { state: { message: '예약이 완료되었습니다!' } });
         return;
       }
-
-      const errResult = result as { message?: string };
-      setErrorMessage(errResult.message ?? '예약에 실패했습니다.');
-      setSelectedRoomId(null);
     } catch (err: unknown) {
-      let serverMessage = '예약에 실패했습니다.';
-      if (axios.isAxiosError(err)) {
-        const data = err.response?.data as { message?: string } | undefined;
-        serverMessage = data?.message ?? serverMessage;
-      }
-      setErrorMessage(serverMessage);
+      setErrorMessage(getApiErrorMessage(err, '예약에 실패했습니다.'));
       setSelectedRoomId(null);
     }
   };
